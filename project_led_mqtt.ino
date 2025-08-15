@@ -3,8 +3,8 @@
 #include <ArduinoJson.h>
 
 // Configurações de WiFi
-const char* ssid = "";
-const char* password = "";
+const char* ssid = "CARLINHOS_VCNET";
+const char* password = "21012004Cg@#1";
 
 // Configurações MQTT
 const char* mqtt_server = "broker.hivemq.com";
@@ -69,13 +69,19 @@ unsigned int safe_min(unsigned int a, int b) {
 }
 
 void setColor(int r, int g, int b) {
+  // Inverte os valores (0 = máximo brilho, 255 = desligado)
+  r = 255 - r;
+  g = 255 - g;
+  b = 255 - b;
+  
+  // Aplica o brilho (agora em valores invertidos)
   r = r * currentBrightness / 100;
   g = g * currentBrightness / 100;
   b = b * currentBrightness / 100;
   
-  analogWrite(PIN_RED,   255 - r);
-  analogWrite(PIN_GREEN, 255 - g);
-  analogWrite(PIN_BLUE,  255 - b);
+  analogWrite(PIN_RED, r);    // PWM direto (sem inversão adicional)
+  analogWrite(PIN_GREEN, g);
+  analogWrite(PIN_BLUE, b);
 }
 
 void publishStatus() {
@@ -259,7 +265,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-}
 
 void setupWiFi() {
   Serial.print("Conectando ao WiFi ");
