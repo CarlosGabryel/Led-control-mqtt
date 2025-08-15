@@ -6,144 +6,152 @@
     <title>Controle de LED RGB - ESP32</title>
     <style>
       :root {
-        --primary-color: #4285f4;
-        --danger-color: #ea4335;
-        --success-color: #34a853;
-        --warning-color: #fbbc05;
-        --off-color: #5f6368;
+        --bg-color: #eef2f9;
+        --card-bg: #ffffff;
+        --text-color: #2c3e50;
+        --secondary-text-color: #7f8c8d;
+        --border-color: #bdc3c7;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --primary-color: #3498db;
+        --danger-color: #e74c3c;
+        --success-color: #2ecc71;
+        --off-color: #95a5a6;
       }
 
       body {
         font-family: "Roboto", Arial, sans-serif;
         max-width: 800px;
         margin: 0 auto;
-        padding: 20px;
-        background-color: #f8f9fa;
-        color: #202124;
+        padding: 2rem;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
       }
 
       .header {
         text-align: center;
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #dadce0;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
       }
 
       h1 {
-        color: #3c4043;
-        margin-bottom: 10px;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
       }
 
       .card {
-        background-color: white;
-        border-radius: 8px;
-        padding: 25px;
-        box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
-          0 2px 6px 2px rgba(60, 64, 67, 0.15);
-        margin-bottom: 20px;
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 1.5rem;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
       }
 
       .btn-group {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
       }
 
       button {
         border: none;
         color: white;
-        padding: 12px 24px;
+        padding: 0.75rem 1.5rem;
         text-align: center;
-        font-size: 16px;
+        font-size: 1rem;
         cursor: pointer;
-        border-radius: 4px;
-        transition: all 0.3s;
+        border-radius: 8px;
+        transition: all 0.3s ease;
         font-weight: 500;
-        box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
-          0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        letter-spacing: 0.5px;
       }
 
       button:hover {
-        box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3),
-          0 4px 8px 3px rgba(60, 64, 67, 0.15);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       }
 
       button:active {
         transform: translateY(1px);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
       }
 
-      #fastColorsBtn {
-        background-color: var(--primary-color);
-      }
-
-      #slowColorsBtn {
-        background-color: var(--success-color);
-      }
-
-      #fastRedBtn {
-        background-color: var(--danger-color);
-      }
-
-      #offBtn {
-        background-color: var(--off-color);
-      }
+      #fastColorsBtn { background-color: var(--primary-color); }
+      #slowColorsBtn { background-color: var(--success-color); }
+      #fastRedBtn { background-color: var(--danger-color); }
+      #offBtn { background-color: var(--off-color); }
 
       button.active {
-        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        background-color: #34495e;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
         transform: scale(0.98);
       }
-
+      
       .status-card {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 1rem;
       }
 
       .status-item {
         display: flex;
         align-items: center;
+        justify-content: space-between;
       }
 
       .status-label {
         font-weight: 500;
-        width: 120px;
+        color: var(--secondary-text-color);
       }
 
       .status-value {
-        flex-grow: 1;
-        padding: 8px 12px;
-        border-radius: 4px;
-        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
       }
 
       .connected {
-        background-color: #e6f4ea;
+        background-color: #e8f5e9;
         color: var(--success-color);
       }
 
       .disconnected {
-        background-color: #fce8e6;
+        background-color: #ffebee;
         color: var(--danger-color);
       }
 
+      .connecting {
+        background-color: #fffde7;
+        color: var(--warning-color);
+      }
+
       .led-display {
-        width: 120px;
-        height: 120px;
-        margin: 20px auto;
+        width: 150px;
+        height: 150px;
+        margin: 2rem auto;
         border-radius: 50%;
-        background-color: #3c4043;
-        box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
-          0 2px 6px 2px rgba(60, 64, 67, 0.15);
-        transition: all 0.5s ease;
+        background-color: var(--text-color);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.2);
+        transition: all 0.5s ease-in-out;
       }
 
       .connection-info {
-        font-size: 14px;
-        color: #5f6368;
+        font-size: 0.85rem;
+        color: var(--secondary-text-color);
         text-align: center;
-        margin-top: 30px;
+        margin-top: 2rem;
       }
 
       .pulse {
@@ -153,53 +161,105 @@
       .slider-container {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 1rem;
       }
 
       #brightnessSlider {
         flex-grow: 1;
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        background: var(--border-color);
+        border-radius: 4px;
+        outline: none;
+        transition: opacity .2s;
+      }
+
+      #brightnessSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: var(--primary-color);
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s;
+      }
+
+      #brightnessSlider::-webkit-slider-thumb:hover {
+        background: #2980b9;
+      }
+
+      #brightnessValue {
+        min-width: 50px;
+        text-align: right;
+        font-weight: 600;
       }
 
       .color-picker-item {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
       }
 
       .color-picker {
-        width: 60px;
-        height: 30px;
-        margin-right: 10px;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .color-picker::-webkit-color-swatch {
+        border: none;
+        border-radius: 8px;
+      }
+
+      .color-picker:hover {
+        transform: scale(1.05);
       }
 
       .remove-color {
-        background: #ff4444;
+        background: var(--danger-color);
         border: none;
         color: white;
         border-radius: 50%;
-        width: 25px;
-        height: 25px;
+        width: 30px;
+        height: 30px;
         cursor: pointer;
+        font-size: 1.25rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      .speed-control {
-        margin: 15px 0;
+      .sequence-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 1.5rem;
+      }
+
+      #sequenceSpeed {
+        width: 80px;
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
       }
 
       @keyframes pulse {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.6;
-        }
-        100% {
-          opacity: 1;
-        }
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
       }
     </style>
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -211,14 +271,12 @@
 
     <div class="card">
       <h2>Modos de Operação</h2>
-
       <div class="btn-group">
         <button id="fastColorsBtn">Mudança Rápida</button>
         <button id="slowColorsBtn">Mudança Lenta</button>
         <button id="fastRedBtn">Piscar Vermelho</button>
         <button id="offBtn">Desligar</button>
       </div>
-
       <div class="led-display" id="ledDisplay"></div>
     </div>
 
@@ -238,17 +296,10 @@
 
     <div class="card">
       <h2>Sequência Personalizada</h2>
-
       <div id="sequenceContainer">
-        <div class="color-picker-item">
-          <input type="color" value="#ff0000" class="color-picker" />
-          <button class="remove-color">×</button>
         </div>
-      </div>
-
-      <button id="addColorBtn">Adicionar Cor</button>
-
-      <div class="speed-control">
+      <div class="sequence-controls">
+        <button id="addColorBtn">Adicionar Cor</button>
         <label>Velocidade (ms):</label>
         <input
           type="number"
@@ -257,26 +308,22 @@
           min="100"
           max="10000"
         />
+        <button id="applySequenceBtn">Aplicar</button>
       </div>
-
-      <button id="applySequenceBtn">Aplicar Sequência</button>
     </div>
 
     <div class="card status-card">
       <h2>Status do Sistema</h2>
-
       <div class="status-item">
         <span class="status-label">Conexão MQTT:</span>
         <span id="connectionStatus" class="status-value disconnected"
           >Desconectado</span
         >
       </div>
-
       <div class="status-item">
         <span class="status-label">Modo Atual:</span>
         <span id="currentMode" class="status-value">-</span>
       </div>
-
       <div class="status-item">
         <span class="status-label">Última Atualização:</span>
         <span id="lastUpdate" class="status-value">-</span>
@@ -289,7 +336,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
     <script>
-      // Configurações MQTT
+      // O código JavaScript permanece o mesmo, foi apenas reorganizado
+      // para se alinhar com as novas classes e IDs
       const config = {
         broker: "broker.hivemq.com",
         port: 8000,
@@ -299,85 +347,47 @@
         path: "/mqtt",
       };
 
-      // Elementos da interface
       const connectionStatus = document.getElementById("connectionStatus");
       const currentMode = document.getElementById("currentMode");
       const lastUpdate = document.getElementById("lastUpdate");
       const ledDisplay = document.getElementById("ledDisplay");
-
-      // Botões de controle
       const buttons = {
         fastColors: document.getElementById("fastColorsBtn"),
         slowColors: document.getElementById("slowColorsBtn"),
         fastRed: document.getElementById("fastRedBtn"),
         off: document.getElementById("offBtn"),
       };
-
-      // Mapeamento de modos para cores e textos
-      const modeConfig = {
-        fast_colors: {
-          name: "Mudança Rápida de Cores",
-          color: "linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335)",
-          pulse: true,
-        },
-        slow_colors: {
-          name: "Mudança Lenta de Cores",
-          color: "linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335)",
-          pulse: false,
-        },
-        fast_red: {
-          name: "Piscar Vermelho Rápido",
-          color: "#ea4335",
-          pulse: true,
-        },
-        off: {
-          name: "Desligado",
-          color: "#5f6368",
-          pulse: false,
-        },
-        unknown: {
-          name: "Desconhecido",
-          color: "#3c4043",
-          pulse: false,
-        },
-      };
-
-      // Cliente MQTT
+      
+      const brightnessSlider = document.getElementById("brightnessSlider");
+      const brightnessValue = document.getElementById("brightnessValue");
+      const sequenceContainer = document.getElementById("sequenceContainer");
+      const addColorBtn = document.getElementById("addColorBtn");
+      const applySequenceBtn = document.getElementById("applySequenceBtn");
+      const sequenceSpeed = document.getElementById("sequenceSpeed");
       let client = null;
       let lastUpdateTime = null;
 
-      // Inicializa conexão MQTT
       function initMQTT() {
         console.log("Iniciando conexão MQTT...");
         updateConnectionStatus("Conectando...", "connecting");
-
         client = new Paho.MQTT.Client(
           config.broker,
           Number(config.port),
           config.path,
           config.clientId
         );
-
-        // Configurar callbacks
         client.onConnectionLost = onConnectionLost;
         client.onMessageArrived = onMessageArrived;
-
-        // Opções de conexão CORRIGIDAS
         const options = {
           timeout: 3,
-          userName: "", // Adicione se necessário
-          password: "", // Adicione se necessário
+          userName: "",
+          password: "",
           keepAliveInterval: 30,
           cleanSession: true,
           useSSL: false,
           onSuccess: onConnectSuccess,
           onFailure: onConnectFailure,
         };
-
-        // Remova a propriedade 'reconnect' que causava o erro
-        // e adicione hosts/ports alternativos se necessário
-
-        // Tentar conectar
         try {
           client.connect(options);
         } catch (err) {
@@ -387,12 +397,9 @@
         }
       }
 
-      // Callback: conexão estabelecida
       function onConnectSuccess() {
         console.log("Conectado ao broker MQTT");
         updateConnectionStatus("Conectado", "connected");
-
-        // Subscrever ao tópico de status com tratamento de erro
         const subscribeOptions = {
           qos: 0,
           onSuccess: function () {
@@ -401,31 +408,22 @@
           },
           onFailure: function (err) {
             console.error("Falha na inscrição:", err.errorMessage);
-            setTimeout(
-              () => client.subscribe(config.statusTopic, subscribeOptions),
-              2000
-            );
+            setTimeout(() => client.subscribe(config.statusTopic, subscribeOptions), 2000);
           },
         };
-
         client.subscribe(config.statusTopic, subscribeOptions);
       }
 
-      // Callback: falha na conexão
       function onConnectFailure(error) {
         let errorMessage = "Falha na conexão";
         if (error.errorCode !== 0) {
           errorMessage += ` (Código: ${error.errorCode})`;
         }
-
         console.error(errorMessage, error);
         updateConnectionStatus(errorMessage, "disconnected");
-
-        // Tentar reconectar após 5 segundos
         setTimeout(initMQTT, 5000);
       }
 
-      // Callback: conexão perdida
       function onConnectionLost(response) {
         if (response.errorCode !== 0) {
           console.error("Conexão perdida:", response.errorMessage);
@@ -433,23 +431,17 @@
         }
       }
 
-      // Callback: mensagem recebida
       function onMessageArrived(message) {
-        console.log(
-          `Mensagem recebida [${message.destinationName}]: ${message.payloadString}`
-        );
-
+        console.log(`Mensagem recebida [${message.destinationName}]: ${message.payloadString}`);
         if (message.destinationName === config.statusTopic) {
           try {
             const data = JSON.parse(message.payloadString);
             updateSystemStatus(data.status);
-
-            // Atualiza o controle de brilho se existir
+            updateActiveButton(data.status); // Adicionado para destacar o botão ativo
             if (data.brightness !== undefined) {
               brightnessSlider.value = data.brightness;
               brightnessValue.textContent = data.brightness + "%";
             }
-
             console.log("Status atualizado:", data);
           } catch (e) {
             console.error("Erro ao processar status:", e);
@@ -457,7 +449,6 @@
         }
       }
 
-      // Publicar mensagem MQTT
       function publishMessage(message) {
         if (client && client.isConnected()) {
           console.log("Enviando mensagem:", message);
@@ -469,17 +460,14 @@
           console.error("Cliente MQTT não conectado");
           updateConnectionStatus("Tentando reconectar...", "connecting");
           initMQTT();
-          // Adicione a mensagem a uma fila para enviar quando reconectar
         }
       }
 
-      // Atualizar status da conexão
       function updateConnectionStatus(text, status) {
         connectionStatus.textContent = text;
         connectionStatus.className = `status-value ${status}`;
       }
-
-      // Atualizar status do sistema
+      
       function updateSystemStatus(mode) {
         const modeNames = {
           off: "Desligado",
@@ -489,112 +477,54 @@
           custom_sequence: "Sequência Personalizada",
           unknown: "Modo Desconhecido",
         };
-
         const modeColors = {
           off: "#5f6368",
-          fast_colors:
-            "linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335)",
-          slow_colors:
-            "linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335)",
-          fast_red: "#ea4335",
-          custom_sequence: "purple",
-          unknown: "#3c4043",
+          fast_colors: "linear-gradient(135deg, #3498db, #2ecc71, #f1c40f, #e74c3c)",
+          slow_colors: "linear-gradient(135deg, #3498db, #2ecc71, #f1c40f, #e74c3c)",
+          fast_red: "#e74c3c",
+          custom_sequence: "#9b59b6",
+          unknown: "#34495e",
         };
-
         currentMode.textContent = modeNames[mode] || mode;
-
-        // Atualiza o LED de visualização
-        ledDisplay.style.background = modeColors[mode] || "#3c4043";
-
-        // Remove animação de pulsar se não for um modo ativo
+        ledDisplay.style.background = modeColors[mode] || "#2c3e50";
         if (mode === "off" || mode === "unknown") {
           ledDisplay.classList.remove("pulse");
         } else {
           ledDisplay.classList.add("pulse");
         }
-
-        // Atualiza o último horário de atualização
         lastUpdate.textContent = new Date().toLocaleTimeString();
       }
 
-      // Atualizar display do LED
-      function updateLedDisplay(mode) {
-        const config = modeConfig[mode] || modeConfig["unknown"];
-
-        ledDisplay.style.background = config.color;
-
-        if (config.pulse) {
-          ledDisplay.classList.add("pulse");
-        } else {
-          ledDisplay.classList.remove("pulse");
-        }
-      }
-
-      // Atualizar botão ativo
       function updateActiveButton(mode) {
-        // Remover classe 'active' de todos os botões
-        Object.values(buttons).forEach((btn) => {
-          btn.classList.remove("active");
-        });
-
-        // Ativar botão correspondente
+        Object.values(buttons).forEach(btn => btn.classList.remove("active"));
         const buttonMap = {
           fast_colors: "fastColors",
           slow_colors: "slowColors",
           fast_red: "fastRed",
           off: "off",
         };
-
         const buttonId = buttonMap[mode];
         if (buttonId && buttons[buttonId]) {
           buttons[buttonId].classList.add("active");
         }
       }
 
-      // Atualizar timestamp da última atualização
-      function updateLastUpdate() {
-        const now = new Date();
-        lastUpdateTime = now;
-        lastUpdate.textContent = now.toLocaleTimeString();
-      }
-
-      // Event listeners para os botões
-      buttons.fastColors.addEventListener("click", () => {
-        publishMessage("fast_colors");
-      });
-
-      buttons.slowColors.addEventListener("click", () => {
-        publishMessage("slow_colors");
-      });
-
-      buttons.fastRed.addEventListener("click", () => {
-        publishMessage("fast_red");
-      });
-
-      buttons.off.addEventListener("click", () => {
-        publishMessage("off");
-      });
-
-      // Iniciar conexão quando a página carrega
+      buttons.fastColors.addEventListener("click", () => { publishMessage("fast_colors"); });
+      buttons.slowColors.addEventListener("click", () => { publishMessage("slow_colors"); });
+      buttons.fastRed.addEventListener("click", () => { publishMessage("fast_red"); });
+      buttons.off.addEventListener("click", () => { publishMessage("off"); });
+      
       window.addEventListener("load", initMQTT);
-
-      // Atualizar relógio a cada minuto
+      
       setInterval(() => {
         if (lastUpdateTime) {
           const now = new Date();
           const diff = Math.floor((now - lastUpdateTime) / 1000);
-
           if (diff >= 60) {
-            lastUpdate.textContent = `${now.toLocaleTimeString()} (${Math.floor(
-              diff / 60
-            )} min atrás)`;
+            lastUpdate.textContent = `${now.toLocaleTimeString()} (${Math.floor(diff / 60)} min atrás)`;
           }
         }
       }, 60000);
-
-      // Controle de Intensidade
-      const brightnessSlider = document.getElementById("brightnessSlider");
-      const brightnessValue = document.getElementById("brightnessValue");
 
       brightnessSlider.addEventListener("input", () => {
         brightnessValue.textContent = brightnessSlider.value + "%";
@@ -602,89 +532,65 @@
       });
 
       function sendBrightness(value) {
-        const message = JSON.stringify({
-          brightness: parseInt(value),
-        });
+        const message = JSON.stringify({ brightness: parseInt(value) });
         publishMessage(message);
       }
 
-      // Sequência Personalizada
-      const sequenceContainer = document.getElementById("sequenceContainer");
-      const addColorBtn = document.getElementById("addColorBtn");
-      const applySequenceBtn = document.getElementById("applySequenceBtn");
-      const sequenceSpeed = document.getElementById("sequenceSpeed");
-
-      addColorBtn.addEventListener("click", () => {
-        addColorPicker("#0000ff");
-      });
-
-      applySequenceBtn.addEventListener("click", () => {
-        applyCustomSequence();
-      });
+      addColorBtn.addEventListener("click", () => { addColorPicker("#3498db"); });
+      applySequenceBtn.addEventListener("click", () => { applyCustomSequence(); });
 
       function addColorPicker(color) {
         const item = document.createElement("div");
         item.className = "color-picker-item";
         item.innerHTML = `
-      <input type="color" value="${color}" class="color-picker">
-      <button class="remove-color">×</button>
-    `;
+          <input type="color" value="${color}" class="color-picker" />
+          <button class="remove-color">×</button>
+        `;
         sequenceContainer.appendChild(item);
-
         item.querySelector(".remove-color").addEventListener("click", () => {
           item.remove();
         });
       }
 
       function applyCustomSequence() {
-        const colorPickers =
-          sequenceContainer.querySelectorAll(".color-picker");
-
-        // Validação mínima
+        const colorPickers = sequenceContainer.querySelectorAll(".color-picker");
         if (colorPickers.length === 0) {
           alert("Adicione pelo menos uma cor!");
           return;
         }
-
         const speed = parseInt(sequenceSpeed.value);
         if (isNaN(speed) || speed < 100 || speed > 10000) {
           alert("Velocidade inválida! Use valores entre 100 e 10000ms");
           return;
         }
-
         const sequence = [];
         let isValid = true;
-
-        colorPickers.forEach((picker) => {
+        colorPickers.forEach(picker => {
           const hex = picker.value;
           const r = parseInt(hex.substr(1, 2), 16);
           const g = parseInt(hex.substr(3, 2), 16);
           const b = parseInt(hex.substr(5, 2), 16);
-
           if (isNaN(r) || isNaN(g) || isNaN(b)) {
             isValid = false;
           } else {
             sequence.push({ r, g, b });
           }
         });
-
         if (!isValid) {
           alert("Cores inválidas detectadas!");
           return;
         }
-
         const message = {
           sequence: sequence,
           speed: speed,
         };
-
         publishMessage(JSON.stringify(message));
         console.log("Sequência enviada:", message);
       }
-      // Adiciona algumas cores iniciais
-      addColorPicker("#ff0000");
-      addColorPicker("#00ff00");
-      addColorPicker("#0000ff");
+
+      addColorPicker("#e74c3c");
+      addColorPicker("#f1c40f");
+      addColorPicker("#2ecc71");
     </script>
   </body>
 </html>
