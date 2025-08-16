@@ -3,8 +3,8 @@
 #include <ArduinoJson.h>
 
 // Configurações de WiFi
-const char* ssid = "CARLINHOS_VCNET";
-const char* password = "21012004Cg@#1";
+const char* ssid = "";
+const char* password = "";
 
 // Configurações MQTT
 const char* mqtt_server = "broker.hivemq.com";
